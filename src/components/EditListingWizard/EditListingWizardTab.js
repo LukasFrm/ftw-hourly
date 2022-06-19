@@ -18,6 +18,7 @@ import {
   EditListingPhotosPanel,
   EditListingPoliciesPanel,
   EditListingPricingPanel,
+  EditListingOnlineOfflinePanel
 } from '../../components';
 
 import css from './EditListingWizard.module.css';
@@ -29,6 +30,7 @@ export const POLICY = 'policy';
 export const LOCATION = 'location';
 export const PRICING = 'pricing';
 export const PHOTOS = 'photos';
+export const ONLINE_OFFLINE = 'online_offline';
 
 // EditListingWizardTab component supports these tabs
 export const SUPPORTED_TABS = [
@@ -39,6 +41,7 @@ export const SUPPORTED_TABS = [
   PRICING,
   AVAILABILITY,
   PHOTOS,
+  ONLINE_OFFLINE,
 ];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
@@ -276,6 +279,20 @@ const EditListingWizardTab = props => {
             onCompleteEditListingWizardTab(tab, values);
           }}
           onUpdateImageOrder={onUpdateImageOrder}
+        />
+      );
+    }
+    case ONLINE_OFFLINE: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? 'EditListingWizard.saveOnlineOffline'
+        : 'EditListingWizard.saveEditOnlineOffline';
+      return (
+        <EditListingOnlineOfflinePanel
+          {...panelProps(ONLINE_OFFLINE)}
+          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values);
+          }}
         />
       );
     }

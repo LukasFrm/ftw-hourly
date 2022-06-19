@@ -134,6 +134,20 @@ export const filters = [
       ],
     },
   },
+  {
+    id: 'onlineOfflineOpts',
+    label: 'Online/Offline',
+    type: 'SelectMultipleFilter',
+    group: 'secondary',
+    queryParamNames: ['online_offline'],
+    config: {
+      searchMode: 'has_all',
+      options: [
+        { key: 'offlineClassesSelected', label: 'I do offer offline sessions' },
+        { key: 'onlineClassesSelected', label: 'I do offer online sessions' },
+      ],
+    },
+  },
 ];
 
 export const sortConfig = {

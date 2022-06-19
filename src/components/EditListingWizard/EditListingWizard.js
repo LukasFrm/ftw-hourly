@@ -26,6 +26,7 @@ import EditListingWizardTab, {
   LOCATION,
   PRICING,
   PHOTOS,
+  ONLINE_OFFLINE,
 } from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
 
@@ -42,6 +43,7 @@ export const TABS = [
   DESCRIPTION,
   FEATURES,
   //POLICY,
+  ONLINE_OFFLINE,
   LOCATION,
   PRICING,
   ...availabilityMaybe,
@@ -70,6 +72,8 @@ const tabLabel = (intl, tab) => {
     key = 'EditListingWizard.tabLabelAvailability';
   } else if (tab === PHOTOS) {
     key = 'EditListingWizard.tabLabelPhotos';
+  } else if (tab === ONLINE_OFFLINE) {
+    key = 'EditListingWizard.tabLabelOnlineOffline';
   }
 
   return intl.formatMessage({ id: key });
@@ -109,6 +113,12 @@ const tabCompleted = (tab, listing) => {
       return !!availabilityPlan;
     case PHOTOS:
       return images && images.length > 0;
+    case ONLINE_OFFLINE:
+      return !!(
+        publicData &&
+        (publicData.onlineOfflineOpts.includes('onlineClassesSelected') && !!publicData.onlineSessionsProvidedBy?.length ||
+        publicData.onlineOfflineOpts?.offlineClassesSelected)
+      );
     default:
       return false;
   }
