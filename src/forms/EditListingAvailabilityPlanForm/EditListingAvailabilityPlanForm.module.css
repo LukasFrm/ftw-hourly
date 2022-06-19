@@ -153,6 +153,11 @@
   @apply --marketplaceH5FontStyles;
   color: var(--matterColor);
 }
+
+.buttonEditSeats {
+  padding: 5px;
+}
+
 .submitButton {
   margin-top: auto;
   flex-shrink: 0;

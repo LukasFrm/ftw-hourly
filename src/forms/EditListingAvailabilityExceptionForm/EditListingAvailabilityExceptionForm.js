@@ -325,6 +325,11 @@ const onExceptionStartDateChange = (value, timeRanges, props) => {
   });
 };
 
+const onExceptionSeatsChange = (e, props) => {
+  const { form } = props;
+  form.change('exceptionSeats', e.target.value);
+};
+
 // Helper function, which changes form's state when exceptionStartTime select has been changed
 const onExceptionStartTimeChange = (value, timeRangesOnSelectedDate, props) => {
   const { timeZone, intl, form, values } = props;
@@ -428,6 +433,7 @@ const EditListingAvailabilityExceptionForm = props => {
           exceptionStartTime = null,
           exceptionEndDate,
           exceptionEndTime,
+          exceptionSeats = 1,
         } = values;
 
         const exceptionStartDay = extractDateFromFieldDateInput(exceptionStartDate);
@@ -511,6 +517,7 @@ const EditListingAvailabilityExceptionForm = props => {
                   exceptionStartTime: null,
                   exceptionEndDate: null,
                   exceptionEndTime: null,
+                  exceptionSeats: 1,
                 });
               });
             }}
@@ -641,8 +648,26 @@ const EditListingAvailabilityExceptionForm = props => {
                   </FieldSelect>
                 </div>
               </div>
+              {availability === 'available' && (
+                <div>
+                  <div className={css.seatsField}>
+                    <label htmlFor="css.addSeats">
+                      <FormattedMessage id="EditListingAvailabilityPlanForm.seats" />
+                    </label>
+                    <input
+                      className="css.addSeats"
+                      id="css.addSeats"
+                      type="number"
+                      component="input"
+                      placeholder="1-1000"
+                      max="1000"
+                      value={exceptionSeats}
+                      onChange={e => onExceptionSeatsChange(e, formRenderProps)}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
-
             <div className={css.submitButton}>
               {updateListingError ? (
                 <p className={css.error}>

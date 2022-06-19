@@ -30,7 +30,8 @@ module.exports = (req, res) => {
       };
 
       if (isSpeculative) {
-        return trustedSdk.transactions.initiateSpeculative(body, queryParams);
+        delete body.params.lineItems[0].seats; // <-- Got stuck here...
+        return trustedSdk.transactions.initiateSpeculative(body, queryParams); // <-- Error likely happening here
       }
       return trustedSdk.transactions.initiate(body, queryParams);
     })

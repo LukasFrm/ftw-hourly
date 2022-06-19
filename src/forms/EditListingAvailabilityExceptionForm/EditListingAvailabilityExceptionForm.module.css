@@ -85,6 +85,10 @@
   }
 }
 
+.seatsField {
+  margin-top: 24px;
+}
+
 .fieldDisabled {
   background: none;
   color: var(--matterColorNegative);

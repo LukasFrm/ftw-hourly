@@ -182,6 +182,16 @@ const DailyPlan = props => {
                           ))}
                         </FieldSelect>
                       </div>
+                       <FormattedMessage id="EditListingAvailabilityPlanForm.seats" />
+                       <input
+                        className={`${name}.addSeats`}
+                        id={`${name}.addSeats`}
+                        type="number"
+                        placeholder='1-1000'
+                        max='1000'
+                        value={fields.value[index].seats}
+                        onChange={(e) => { fields.update(index, { ...fields.value[index], seats: e.target.value }), console.log(fields.value) }}
+                       /> 
                     </div>
                     <div
                       className={css.fieldArrayRemove}
@@ -198,7 +208,7 @@ const DailyPlan = props => {
                 <InlineTextButton
                   type="button"
                   className={css.buttonSetHours}
-                  onClick={() => fields.push({ startTime: null, endTime: null })}
+                  onClick={() => fields.push({ startTime: null, endTime: null, seats: 1 })}
                 >
                   <FormattedMessage id="EditListingAvailabilityPlanForm.setHours" />
                 </InlineTextButton>
@@ -206,7 +216,7 @@ const DailyPlan = props => {
                 <InlineTextButton
                   type="button"
                   className={css.buttonAddNew}
-                  onClick={() => fields.push({ startTime: null, endTime: null })}
+                  onClick={() => fields.push({ startTime: null, endTime: null, seats: 1 })}
                 >
                   <FormattedMessage id="EditListingAvailabilityPlanForm.addAnother" />
                 </InlineTextButton>

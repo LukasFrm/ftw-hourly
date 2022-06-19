@@ -63,7 +63,7 @@ exports.calculateTotalPriceFromPercentage = (unitPrice, percentage) => {
  *
  * @returns {Money} lineTotal
  */
-exports.calculateTotalPriceFromSeats = (unitPrice, unitCount, seats) => {
+exports.calculateTotalPriceFromSeats = (unitPrice, quantity, seats) => {
   if (seats < 0) {
     throw new Error(`Value of seats can't be negative`);
   }
@@ -73,7 +73,7 @@ exports.calculateTotalPriceFromSeats = (unitPrice, unitCount, seats) => {
   // NOTE: We round the total price to the nearest integer.
   //       Payment processors don't support fractional subunits.
   const totalPrice = amountFromUnitPrice
-    .times(unitCount)
+    .times(quantity)
     .times(seats)
     .toNearest(1, Decimal.ROUND_HALF_UP);
 
@@ -114,17 +114,16 @@ exports.calculateQuantityFromHours = (startDate, endDate) => {
  *
  */
 exports.calculateLineTotal = lineItem => {
-  const { code, unitPrice, quantity, percentage, seats, units } = lineItem;
+  const { code, unitPrice, quantity, percentage, seats } = lineItem;
 
-  if (quantity) {
-    return this.calculateTotalPriceFromQuantity(unitPrice, quantity);
+
+  if (quantity && seats) {
+    return this.calculateTotalPriceFromSeats(unitPrice, quantity, seats);
   } else if (percentage) {
     return this.calculateTotalPriceFromPercentage(unitPrice, percentage);
-  } else if (seats && units) {
-    return this.calculateTotalPriceFromSeats(unitPrice, units, seats);
   } else {
     throw new Error(
-      `Can't calculate the lineTotal of lineItem: ${code}. Make sure the lineItem has quantity, percentage or both seats and units`
+      `Can't calculate the lineTotal of lineItem: ${code}. Make sure the lineItem has quantity or percentage`
     );
   }
 };

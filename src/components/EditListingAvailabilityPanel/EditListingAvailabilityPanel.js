@@ -72,7 +72,7 @@ const Weekday = props => {
 // Create initial entry mapping for form's initial values
 const createEntryDayGroups = (entries = {}) =>
   entries.reduce((groupedEntries, entry) => {
-    const { startTime, endTime: endHour, dayOfWeek } = entry;
+    const { startTime, endTime: endHour, dayOfWeek, seats } = entry;
     const dayGroup = groupedEntries[dayOfWeek] || [];
     return {
       ...groupedEntries,
@@ -81,6 +81,7 @@ const createEntryDayGroups = (entries = {}) =>
         {
           startTime,
           endTime: endHour === '00:00' ? '24:00' : endHour,
+          seats,
         },
       ],
     };
@@ -101,12 +102,12 @@ const createEntriesFromSubmitValues = values =>
   WEEKDAYS.reduce((allEntries, dayOfWeek) => {
     const dayValues = values[dayOfWeek] || [];
     const dayEntries = dayValues.map(dayValue => {
-      const { startTime, endTime } = dayValue;
+      const { startTime, endTime, seats } = dayValue;
       // Note: This template doesn't support seats yet.
       return startTime && endTime
         ? {
             dayOfWeek,
-            seats: 1,
+            seats,
             startTime,
             endTime: endTime === '24:00' ? '00:00' : endTime,
           }
@@ -167,13 +168,13 @@ const EditListingAvailabilityPanel = props => {
     type: 'availability-plan/time',
     timezone: defaultTimeZone(),
     entries: [
-      // { dayOfWeek: 'mon', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'tue', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'wed', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'thu', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'fri', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'sat', startTime: '09:00', endTime: '17:00', seats: 1 },
-      // { dayOfWeek: 'sun', startTime: '09:00', endTime: '17:00', seats: 1 },
+      { dayOfWeek: 'mon', startTime: '09:00', endTime: '17:00', seats: 1 },
+      { dayOfWeek: 'tue', startTime: '09:00', endTime: '17:00', seats: 1 },
+      { dayOfWeek: 'wed', startTime: '09:00', endTime: '17:00', seats: 1 },
+      { dayOfWeek: 'thu', startTime: '09:00', endTime: '17:00', seats: 1 },
+      { dayOfWeek: 'fri', startTime: '09:00', endTime: '17:00', seats: 1 },
+      { dayOfWeek: 'sat', startTime: '09:00', endTime: '17:00', seats: 1 },
+      { dayOfWeek: 'sun', startTime: '09:00', endTime: '17:00', seats: 1 },
     ],
   };
   const availabilityPlan = currentListing.attributes.availabilityPlan || defaultAvailabilityPlan;
@@ -199,10 +200,10 @@ const EditListingAvailabilityPanel = props => {
 
   // Save exception click handler
   const saveException = values => {
-    const { availability, exceptionStartTime, exceptionEndTime } = values;
+    const { availability, exceptionStartTime, exceptionEndTime, exceptionSeats } = values;
 
     // TODO: add proper seat handling
-    const seats = availability === 'available' ? 1 : 0;
+    const seats = availability === 'available' ? exceptionSeats : 0;
 
     return onAddAvailabilityException({
       listingId: listing.id,
@@ -221,6 +222,18 @@ const EditListingAvailabilityPanel = props => {
   return (
     <main className={classes}>
       <h1 className={css.title}>
+        <FormattedMessage
+          id="EditListingAvailabilityPanel.title"
+          values={{
+            listingTitle: (
+              <ListingLink listing={listing}>
+                <FormattedMessage id="EditListingAvailabilityPanel.listingTitle" />
+              </ListingLink>
+            ),
+          }}
+        />
+      </h1>
+      <h2 className={css.title}>
         {isPublished ? (
           <FormattedMessage
             id="EditListingAvailabilityPanel.title"
@@ -235,7 +248,7 @@ const EditListingAvailabilityPanel = props => {
         ) : (
           <FormattedMessage id="EditListingAvailabilityPanel.createListingTitle" />
         )}
-      </h1>
+      </h2>
 
       <section className={css.section}>
         <header className={css.sectionHeader}>
@@ -319,6 +332,14 @@ const EditListingAvailabilityPanel = props => {
                     dateType={DATE_TYPE_DATETIME}
                     timeZone={availabilityPlan.timezone}
                   />
+                  {!!seats && (
+                    <div className={css.timeRange}>
+                      <span className={css.dateSection}>
+                        <FormattedMessage id="EditListingAvailabilityPlanForm.seats" />
+                        {seats}
+                      </span>
+                    </div>
+                  )}
                 </div>
               );
             })}

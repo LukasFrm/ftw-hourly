@@ -102,12 +102,12 @@ export class ListingPageComponent extends Component {
     const listingId = new UUID(params.id);
     const listing = getListing(listingId);
 
-    const { bookingStartTime, bookingEndTime, ...restOfValues } = values;
+    const { bookingStartTime, bookingEndTime, bookingSeats, ...restOfValues } = values;
     const bookingStart = timestampToDate(bookingStartTime);
     const bookingEnd = timestampToDate(bookingEndTime);
-
     const bookingData = {
       quantity: calculateQuantityFromHours(bookingStart, bookingEnd),
+      seats: parseInt(bookingSeats),
       ...restOfValues,
     };
 

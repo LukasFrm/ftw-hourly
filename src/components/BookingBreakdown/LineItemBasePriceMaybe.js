@@ -24,12 +24,13 @@ const LineItemBasePriceMaybe = props => {
 
   const quantity = unitPurchase ? unitPurchase.quantity.toString() : null;
   const unitPrice = unitPurchase ? formatMoney(intl, unitPurchase.unitPrice) : null;
+  const seats = unitPurchase.seats
   const total = unitPurchase ? formatMoney(intl, unitPurchase.lineTotal) : null;
 
   return quantity && total ? (
     <div className={css.lineItem}>
       <span className={css.itemLabel}>
-        <FormattedMessage id={translationKey} values={{ unitPrice, quantity }} />
+        <FormattedMessage id={translationKey} values={{ unitPrice, quantity, seats }} />
       </span>
       <span className={css.itemValue}>{total}</span>
     </div>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { array, bool, func, object, string } from 'prop-types';
 import { compose } from 'redux';
-import { Form as FinalForm, FormSpy } from 'react-final-form';
+import { Form as FinalForm, FormSpy, Field } from 'react-final-form';
 import classNames from 'classnames';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { timestampToDate } from '../../util/dates';
@@ -30,9 +30,10 @@ export class BookingTimeFormComponent extends Component {
   // In case you add more fields to the form, make sure you add
   // the values here to the bookingData object.
   handleOnChange(formValues) {
-    const { bookingStartTime, bookingEndTime } = formValues.values;
+    const { bookingStartTime, bookingEndTime, bookingSeats } = formValues.values;
     const startDate = bookingStartTime ? timestampToDate(bookingStartTime) : null;
     const endDate = bookingEndTime ? timestampToDate(bookingEndTime) : null;
+    const seats = bookingSeats ? bookingSeats : 1;
 
     const listingId = this.props.listingId;
     const isOwnListing = this.props.isOwnListing;
@@ -43,7 +44,7 @@ export class BookingTimeFormComponent extends Component {
 
     if (bookingStartTime && bookingEndTime && !isSameTime && !this.props.fetchLineItemsInProgress) {
       this.props.onFetchTransactionLineItems({
-        bookingData: { startDate, endDate },
+        bookingData: { startDate, endDate, seats },
         listingId,
         isOwnListing,
       });
@@ -101,6 +102,7 @@ export class BookingTimeFormComponent extends Component {
 
           const startTime = values && values.bookingStartTime ? values.bookingStartTime : null;
           const endTime = values && values.bookingEndTime ? values.bookingEndTime : null;
+          const seats = values && values.bookingSeats ? values.bookingSeats : 1;
 
           const bookingStartLabel = intl.formatMessage({
             id: 'BookingTimeForm.bookingStartTitle',
@@ -122,6 +124,7 @@ export class BookingTimeFormComponent extends Component {
                   startDate,
                   endDate,
                   timeZone,
+                  seats,
                 }
               : null;
 
@@ -166,7 +169,12 @@ export class BookingTimeFormComponent extends Component {
           };
 
           return (
-            <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
+            <Form
+              onSubmit={handleSubmit}
+              className={classes}
+              enforcePagePreloadFor="CheckoutPage"
+              // initialValues={{ bookingSeats: '1' }}
+            >
               <FormSpy
                 subscription={{ values: true }}
                 onChange={values => {
@@ -188,6 +196,18 @@ export class BookingTimeFormComponent extends Component {
                   timeZone={timeZone}
                 />
               ) : null}
+
+              <FormattedMessage id="EditListingAvailabilityPlanForm.seats" />
+              <Field
+                className={css.bookingSeats}
+                id={css.bookingSeats}
+                type="number"
+                placeholder="1-1000"
+                max="1000"
+                min="1"
+                name="bookingSeats"
+                component="input"
+              />
 
               {bookingInfoMaybe}
               {loadingSpinnerMaybe}

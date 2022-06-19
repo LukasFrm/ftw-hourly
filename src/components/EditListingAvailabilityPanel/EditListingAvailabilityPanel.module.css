@@ -149,6 +149,12 @@
   color: var(--matterColorAnti);
 }
 
+.seatsField {
+  @apply --marketplaceH5FontStyles;
+  margin: -2px 12px 13px 32px;
+  color: var(--matterColorAnti);
+}
+
 .removeIcon {
   width: 10px;
   height: 10px;
